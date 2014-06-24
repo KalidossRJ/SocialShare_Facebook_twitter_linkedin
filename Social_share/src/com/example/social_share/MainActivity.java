@@ -4,15 +4,16 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
 	ImageView facebook,twitter,linkedin;
+	Intent twitterIntent,linkedinIntent,facebookIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,27 +30,32 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				String urlToShare = "http://kalisandroid.blogspot.com";
-				Intent intent = new Intent(Intent.ACTION_SEND);
-				intent.setType("text/plain");
-				intent.putExtra(Intent.EXTRA_TEXT, urlToShare);
-				// See if official Facebook app is found
+				String urlToShare = "http://kalisandroid.blogspot.com/";
+				facebookIntent = new Intent(Intent.ACTION_SEND);
+				facebookIntent.setType("text/plain");
+				facebookIntent.putExtra(Intent.EXTRA_TEXT, urlToShare);
+
 				boolean facebookAppFound = false;
-				List<ResolveInfo> matches = getPackageManager().queryIntentActivities(intent, 0);
+				List<ResolveInfo> matches = getPackageManager()
+						.queryIntentActivities(facebookIntent, 0);
+
 				for (ResolveInfo info : matches) {
-				    if (info.activityInfo.packageName.toLowerCase().startsWith("com.facebook")) {
-				        intent.setPackage(info.activityInfo.packageName);
-				        facebookAppFound = true;
-				        break;
-				    }
+					if (info.activityInfo.packageName.toLowerCase().startsWith(
+							"com.facebook")) {
+						facebookIntent.setPackage(info.activityInfo.packageName);
+						facebookAppFound = true;
+						break;
+					}
 				}
-				//If facebook app not found, load sharer.php in a browser
-				if (!facebookAppFound) {
-				    String sharerUrl = "https://www.facebook.com/sharer/sharer.php?u=" + urlToShare;
-				    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl));
+
+				if (facebookAppFound) {
+					startActivity(facebookIntent);
 				}
-				startActivity(intent);
-				
+				else
+				{
+					Toast.makeText(MainActivity.this,"Facebook app not Insatlled in your mobile", 4).show();
+				}
+
 			}
 		});
         
@@ -60,23 +66,29 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				
 				String text = "...kaLis...";
-				Intent intent = new Intent(Intent.ACTION_SEND);
-				intent.setType("text/plain");
-				intent.putExtra(Intent.EXTRA_TEXT, text);
-				
+				twitterIntent = new Intent(Intent.ACTION_SEND);
+				twitterIntent.setType("text/plain");
+				twitterIntent.putExtra(Intent.EXTRA_TEXT, text);
+
 				boolean twitterAppFound = false;
-				List<ResolveInfo> matches = getPackageManager().queryIntentActivities(intent, 0);
-				for (ResolveInfo info : matches) {
-				    if (info.activityInfo.packageName.toLowerCase().startsWith("com.twitter")) {
-				        intent.setPackage(info.activityInfo.packageName);
-				        twitterAppFound = true;
-				        break;
-				    }
+				List<ResolveInfo> matches1 = getPackageManager()
+						.queryIntentActivities(twitterIntent, 0);
+				for (ResolveInfo info : matches1) {
+					if (info.activityInfo.packageName.toLowerCase().startsWith(
+							"com.twitter")) {
+						twitterIntent.setPackage(info.activityInfo.packageName);
+						twitterAppFound = true;
+						break;
+					}
 				}
-				if (!twitterAppFound) {
-				    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(text));
+
+				if (twitterAppFound) {
+					startActivity(twitterIntent);
 				}
-				startActivity(intent);
+				else
+				{
+					Toast.makeText(MainActivity.this,"Twitter app not Insatlled in your mobile", 4).show();
+				}
 				
 			}
 		});
@@ -87,25 +99,33 @@ public class MainActivity extends Activity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			
-			String text = "...kaLis...";
-			Intent intent = new Intent(Intent.ACTION_SEND);
-			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_TEXT, text);
-			
+
+			String text1 = "...kaLis...";
+			linkedinIntent = new Intent(Intent.ACTION_SEND);
+			linkedinIntent.setType("text/plain");
+			linkedinIntent.putExtra(Intent.EXTRA_TEXT, text1);
+
 			boolean linkedinAppFound = false;
-			List<ResolveInfo> matches = getPackageManager().queryIntentActivities(intent, 0);
-			for (ResolveInfo info : matches) {
-			    if (info.activityInfo.packageName.toLowerCase().startsWith("com.linkedin")) {
-			        intent.setPackage(info.activityInfo.packageName);
-			        linkedinAppFound = true;
-			        break;
-			    }
+			List<ResolveInfo> matches2 = getPackageManager()
+					.queryIntentActivities(linkedinIntent, 0);
+
+			for (ResolveInfo info : matches2) {
+				if (info.activityInfo.packageName.toLowerCase().startsWith(
+						"com.linkedin")) {
+					linkedinIntent.setPackage(info.activityInfo.packageName);
+					linkedinAppFound = true;
+					break;
+				}
 			}
-			if (!linkedinAppFound) 
+
+			if (linkedinAppFound) {
+				startActivity(linkedinIntent);
+
+			}
+			else
 			{
-			    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(text));
+				Toast.makeText(MainActivity.this,"LinkedIn app not Insatlled in your mobile", 4).show();
 			}
-			startActivity(intent);
 			
 		}
 	});
